@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Icon Manager</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+      border: 1px solid var(--border);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+
+    .config-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .input-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .input-field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #475569;
+    }
+
+    .input-field input {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-field input:focus {
+      border-color: var(--primary);
+    }
+
+    .icon-preview-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      background: #f1f5f9;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-preview-container:hover {
+      border-color: var(--primary);
+      background: #eef2ff;
+    }
+
+    .icon-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 22px; /* iOS-style app icon rounded corners */
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background-color: #ffffff;
+    }
+
+    .upload-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .upload-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .upload-btn:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .status-msg {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      text-align: center;
+      word-break: break-all;
+    }
+
+    .status-msg.success { color: #16a34a; }
+    .status-msg.error { color: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>App Icon Uploader</h2>
+    <p>Select or replace your app icon and upload it to Cloudinary.</p>
+
+    <!-- Cloudinary Config Inputs -->
+    <div class="config-group">
+      <div class="input-field">
+        <label for="cloudName">Cloud Name</label>
+        <input type="text" id="cloudName" placeholder="e.g. mycloud123">
+      </div>
+      <div class="input-field">
+        <label for="uploadPreset">Unsigned Upload Preset</label>
+        <input type="text" id="uploadPreset" placeholder="e.g. app_icon_preset">
+      </div>
+    </div>
+
+    <!-- Icon Preview & Selector -->
+    <div class="icon-preview-container" onclick="document.getElementById('fileInput').click()">
+      <img id="iconPreview" class="icon-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='1.5'><rect x='3' y='3' width='18' height='18' rx='5'/><path d='M12 8v8M8 12h8'/></svg>" alt="App Icon Preview">
+      <span style="font-size: 0.8rem; margin-top: 12px; color: #64748b;">Click to select or change icon</span>
+    </div>
+
+    <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+
+    <!-- Upload Action -->
+    <button id="uploadBtn" class="upload-btn" onclick="uploadToCloudinary()">Upload Icon</button>
+
+    <div id="statusMsg" class="status-msg"></div>
+  </div>
+
+  <script>
+    let selectedFile = null;
+
+    // Preview local image when selected
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('iconPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Direct client-side upload to Cloudinary
+    async function uploadToCloudinary() {
+      const cloudName = document.getElementById('cloudName').value.trim();
+      const uploadPreset = document.getElementById('uploadPreset').value.trim();
+      const statusMsg = document.getElementById('statusMsg');
+      const uploadBtn = document.getElementById('uploadBtn');
+
+      if (!cloudName || !uploadPreset) {
+        setStatus("Please fill in both Cloud Name and Upload Preset.", "error");
+        return;
+      }
+
+      if (!selectedFile) {
+        setStatus("Please select an icon image first.", "error");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('upload_preset', uploadPreset);
+
+      // Optional: Set a fixed public_id or folder if your preset allows it
+      // formData.append('public_id', 'app_icon_current');
+
+      try {
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = "Uploading...";
+        setStatus("Uploading to Cloudinary...", "");
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setStatus(`Success! Icon URL:<br><a href="${data.secure_url}" target="_blank">${data.secure_url}</a>`, "success");
+        } else {
+          setStatus(`Upload failed: ${data.error.message}`, "error");
+        }
+      } catch (err) {
+        setStatus(`Error: ${err.message}`, "error");
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "Upload Icon";
+      }
+    }
+
+    function setStatus(text, className) {
+      const statusMsg = document.getElementById('statusMsg');
+      statusMsg.innerHTML = text;
+      statusMsg.className = `status-msg ${className}`;
+    }
+  </script>
+</body>
+        </html>
