@@ -80,6 +80,7 @@
       font-size: 0.875rem;
       outline: none;
       transition: border-color 0.2s;
+      background-color: #f1f5f9;
     }
 
     .input-field input:focus {
@@ -108,7 +109,7 @@
     .icon-preview {
       width: 100px;
       height: 100px;
-      border-radius: 22px; /* iOS-style app icon rounded corners */
+      border-radius: 22px;
       object-fit: cover;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       background-color: #ffffff;
@@ -161,11 +162,11 @@
     <div class="config-group">
       <div class="input-field">
         <label for="cloudName">Cloud Name</label>
-        <input type="text" id="cloudName" placeholder="e.g. mycloud123">
+        <input type="text" id="cloudName" value="dp81zzxlh" placeholder="e.g. dp81zzxlh">
       </div>
       <div class="input-field">
         <label for="uploadPreset">Unsigned Upload Preset</label>
-        <input type="text" id="uploadPreset" placeholder="e.g. app_icon_preset">
+        <input type="text" id="uploadPreset" value="Unsigned upload" placeholder="e.g. Unsigned upload">
       </div>
     </div>
 
@@ -184,6 +185,10 @@
   </div>
 
   <script>
+    // Pre-set Default Credentials
+    const DEFAULT_CLOUD_NAME = 'dp81zzxlh';
+    const DEFAULT_UPLOAD_PRESET = 'Unsigned upload';
+
     let selectedFile = null;
 
     // Preview local image when selected
@@ -201,8 +206,8 @@
 
     // Direct client-side upload to Cloudinary
     async function uploadToCloudinary() {
-      const cloudName = document.getElementById('cloudName').value.trim();
-      const uploadPreset = document.getElementById('uploadPreset').value.trim();
+      const cloudName = document.getElementById('cloudName').value.trim() || DEFAULT_CLOUD_NAME;
+      const uploadPreset = document.getElementById('uploadPreset').value.trim() || DEFAULT_UPLOAD_PRESET;
       const statusMsg = document.getElementById('statusMsg');
       const uploadBtn = document.getElementById('uploadBtn');
 
@@ -219,9 +224,6 @@
       const formData = new FormData();
       formData.append('file', selectedFile);
       formData.append('upload_preset', uploadPreset);
-
-      // Optional: Set a fixed public_id or folder if your preset allows it
-      // formData.append('public_id', 'app_icon_current');
 
       try {
         uploadBtn.disabled = true;
@@ -255,4 +257,4 @@
     }
   </script>
 </body>
-        </html>
+</html>
