@@ -1,623 +1,90 @@
-:root {
-    --bmd-dark: #0f261b;
-    --bmd-primary: #1a3c2a;
-    --bmd-primary-light: #2a5a3e;
-    --bmd-gold: #d4a743;
-    --bmd-gold-light: #f0d080;
-    --bmd-cream: #faf6ed;
-    --bmd-card-bg: #ffffff;
-    --bmd-text-dark: #1a1a1a;
-    --bmd-text-muted: #666666;
-    --bmd-shadow-sm: 0 2px 8px rgba(15, 38, 27, 0.06);
-    --bmd-shadow-md: 0 8px 24px rgba(15, 38, 27, 0.10);
-    --bmd-radius: 16px;
-    --bmd-radius-sm: 10px;
-    --bmd-header-h: 68px;
-    --bmd-ad-h: 34px;
-    --bmd-nav-h: 68px;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
-
-html {
-    scroll-behavior: smooth;
-    font-size: 15px;
-}
-
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: var(--bmd-cream);
-    color: var(--bmd-text-dark);
-    min-height: 100vh;
-    padding-top: calc(var(--bmd-header-h) + var(--bmd-ad-h) + 10px);
-    padding-bottom: calc(var(--bmd-nav-h) + 24px);
-    line-height: 1.45;
-    overflow-x: hidden;
-}
-
-
-.app-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    height: var(--bmd-header-h);
-    background: linear-gradient(135deg, var(--bmd-dark), var(--bmd-primary));
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    border-bottom: 2px solid var(--bmd-gold);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.app-header .brand h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: var(--bmd-gold-light);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.app-header .brand .sub {
-    font-size: 0.62rem;
-    font-style: italic;
-    color: #e0e0e0;
-}
-
-.header-icon-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(212, 167, 67, 0.3);
-    color: var(--bmd-gold-light);
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.marquee-ad {
-    position: fixed;
-    top: var(--bmd-header-h);
-    left: 0;
-    right: 0;
-    z-index: 999;
-    height: var(--bmd-ad-h);
-    background: linear-gradient(90deg, #2a160d, #422213);
-    color: #f5e6d3;
-    font-size: 0.72rem;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    border-bottom: 1px solid rgba(212, 167, 67, 0.4);
-}
-
-.marquee-track {
-    display: flex;
-    white-space: nowrap;
-    animation: marquee 20s linear infinite;
-}
-
-.marquee-track span {
-    padding: 0 45px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-@keyframes marquee {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-50%); }
-}
-
-.feed-container {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 8px 12px;
-}
-
-.category-scroll-container {
-    margin-bottom: 14px;
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 4px 2px 8px;
-    scrollbar-width: none;
-}
-
-.category-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    background: #e8e0d2;
-    color: var(--bmd-primary-dark);
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-right: 6px;
-    border: 1px solid rgba(0,0,0,0.05);
-}
-
-.category-pill.active {
-    background: var(--bmd-primary);
-    color: var(--bmd-gold-light);
-    border-color: var(--bmd-gold);
-}
-
-.spotlight-card {
-    background: linear-gradient(135deg, var(--bmd-primary), var(--bmd-dark));
-    color: #ffffff;
-    border-radius: var(--bmd-radius);
-    padding: 16px;
-    margin-bottom: 16px;
-    border: 1px solid var(--bmd-gold);
-    display: none;
-}
-
-.spotlight-badge {
-    background: var(--bmd-gold);
-    color: var(--bmd-dark);
-    font-size: 0.62rem;
-    font-weight: 800;
-    padding: 3px 10px;
-    border-radius: 12px;
-}
-
-.spotlight-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
-    color: var(--bmd-gold-light);
-    margin: 6px 0;
-}
-
-.post-card {
-    background: var(--bmd-card-bg);
-    border-radius: var(--bmd-radius);
-    margin-bottom: 16px;
-    box-shadow: var(--bmd-shadow-sm);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-}
-
-.post-header-info {
-    padding: 12px 14px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.author-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.author-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--bmd-gold);
-}
-
-.author-name {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--bmd-primary);
-}
-
-.post-date {
-    font-size: 0.65rem;
-    color: var(--bmd-text-muted);
-}
-
-.card-media {
-    position: relative;
-    width: 100%;
-    max-height: 280px;
-    background: #111;
-    overflow: hidden;
-}
-
-.card-media img {
-    width: 100%;
-    max-height: 280px;
-    object-fit: cover;
-}
-
-.audio-wrapper, .video-wrapper {
-    width: 100%;
-    background: #121815;
-    padding: 6px;
-}
-
-audio, video {
-    width: 100%;
-    border-radius: 8px;
-}
-
-.post-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    border-top: 1px solid #f2ede4;
-    background: #fdfbf7;
-}
-
-.action-btn {
-    background: none;
-    border: none;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #555;
-}
-
-.action-btn.like-btn.liked { color: #e74c3c; }
-.action-btn.share-btn { color: #25d366; }
-
-.read-more-btn {
-    background: var(--bmd-primary);
-    color: #ffffff;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 14px;
-    border: none;
-}
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    height: var(--bmd-nav-h);
-    background: rgba(255, 255, 255, 0.97);
-    border-top: 1px solid rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.nav-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #777;
-    font-size: 0.58rem;
-    font-weight: 600;
-    border: none;
-    background: none;
-}
-
-.nav-link.active { color: var(--bmd-primary); }
-.nav-link.active i { color: var(--bmd-gold); }
-
-.nav-link.post-create-btn i {
-    font-size: 1.75rem;
-    color: var(--bmd-gold);
-    background: var(--bmd-primary);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: -18px;
-    border: 2px solid var(--bmd-cream);
-}
-
-.toast {
-    position: fixed;
-    bottom: 82px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: #111;
-    color: #fff;
-    padding: 9px 20px;
-    border-radius: 24px;
-    font-size: 0.8rem;
-    opacity: 0;
-    transition: all 0.25s ease;
-    z-index: 5000;
-    border: 1px solid var(--bmd-gold);
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Buhweju Must Develop – BMD</title>
+    <title>BMD Admin Dashboard</title>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
-    <!-- Fonts & CSS -->
+    <!-- Fonts & Icons & Admin Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body style="background-color: #f4f6f5;">
 
-<header class="app-header">
+<header class="app-header" style="background: linear-gradient(135deg, #0d1b12, #142e1f);">
     <div class="brand">
-        <h1>BUHWEJU MUST DEVELOP</h1>
-        <span class="sub">Eiraka ryabantu baburijo.</span>
+        <h1>BMD ADMIN PANEL</h1>
+        <span class="sub">Control & Management Center</span>
     </div>
     <div class="actions">
-        <button class="header-icon-btn" id="openSearchBtn"><i class="fas fa-search"></i></button>
-        <button class="header-icon-btn" id="refreshFeedBtn"><i class="fas fa-sync-alt"></i></button>
+        <button class="header-icon-btn" onclick="window.location.href='icon.html'" title="Icons & Quick Tools"><i class="fas fa-icons"></i></button>
+        <button class="header-icon-btn" id="adminLogoutBtn" title="Log Out"><i class="fas fa-sign-out-alt"></i></button>
     </div>
 </header>
 
-<div class="marquee-ad">
-    <div class="marquee-track">
-        <span><i class="fas fa-bullhorn"></i> App designed by Dr Byamukama Mentor, expert in ICT.</span>
-        <span><i class="fas fa-lightbulb"></i> Empowering the people of Buhweju through community voice.</span>
-    </div>
-</div>
-
-<main class="feed-container">
-    <div class="category-scroll-container">
-        <button class="category-pill active" data-category="all"><i class="fas fa-th-large"></i> All</button>
-        <button class="category-pill" data-category="news"><i class="fas fa-newspaper"></i> News</button>
-        <button class="category-pill" data-category="development"><i class="fas fa-chart-line"></i> Development</button>
-        <button class="category-pill" data-category="education"><i class="fas fa-graduation-cap"></i> Education</button>
+    <main class="feed-container" style="margin-top: 20px;">
+    <!-- Admin Quick Stats Section -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+        <div style="background: #ffffff; padding: 14px; border-radius: 12px; border-left: 4px solid var(--bmd-gold); box-shadow: var(--bmd-shadow-sm);">
+            <div style="font-size: 0.7rem; color: #666; font-weight: 600;">TOTAL POSTS</div>
+            <div id="statTotalPosts" style="font-size: 1.4rem; font-weight: 800; color: var(--bmd-primary);">--</div>
+        </div>
+        <div style="background: #ffffff; padding: 14px; border-radius: 12px; border-left: 4px solid #27ae60; box-shadow: var(--bmd-shadow-sm);">
+            <div style="font-size: 0.7rem; color: #666; font-weight: 600;">COMMUNITY USERS</div>
+            <div id="statTotalUsers" style="font-size: 1.4rem; font-weight: 800; color: #27ae60;">--</div>
+        </div>
     </div>
 
-    <!-- Hero Spotlight -->
-    <div class="spotlight-card" id="spotlightCard">
-        <span class="spotlight-badge"><i class="fas fa-star"></i> Featured Voice</span>
-        <h2 class="spotlight-title" id="spotlightTitle">Loading...</h2>
-        <p id="spotlightDesc">Connecting...</p>
-        <button class="read-more-btn" id="spotlightBtn" style="background:var(--bmd-gold); color:var(--bmd-dark); margin-top:8px;">Read Feature →</button>
+    <!-- Navigation & Quick Access Buttons including icon.html -->
+    <div style="background: #ffffff; padding: 14px; border-radius: 14px; margin-bottom: 16px; box-shadow: var(--bmd-shadow-sm);">
+        <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--bmd-primary);"><i class="fas fa-toolbox"></i> Quick Actions</h3>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button onclick="window.location.href='icon.html'" style="flex: 1; min-width: 110px; padding: 10px; background: var(--bmd-primary); color: #fff; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i class="fas fa-icons"></i> Icon Panel
+            </button>
+            <button onclick="window.location.href='post.html'" style="flex: 1; min-width: 110px; padding: 10px; background: var(--bmd-gold); color: var(--bmd-dark); border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i class="fas fa-plus-circle"></i> New Post
+            </button>
+        </div>
     </div>
 
-    <!-- Feed Container -->
-    <div id="feedWrapper"></div>
-</main>
+    <!-- Admin Moderation List Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="font-size: 1rem; font-family: 'Playfair Display', serif; color: var(--bmd-primary);">Manage Submissions</h3>
+        <button onclick="loadAdminPosts()" style="background: none; border: none; color: var(--bmd-primary); font-size: 0.75rem; font-weight: 700; cursor: pointer;"><i class="fas fa-sync-alt"></i> Refresh</button>
+    </div>
 
+    <!-- Admin Feed Container for Moderation -->
+    <div id="adminFeedWrapper">
+        <div style="text-align:center; padding:30px; color:#666; font-size: 0.85rem;">Loading admin data...</div>
+    </div>
+    </main>
+
+    <!-- Bottom Nav with Integrated icon.html Access -->
 <nav class="bottom-nav">
-    <button class="nav-link active" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-        <i class="fas fa-home"></i><span>Home</span>
+    <button class="nav-link active" onclick="window.location.href='index.html'">
+        <i class="fas fa-chart-pie"></i><span>Dashboard</span>
     </button>
-    <button class="nav-link" onclick="window.location.href='register.html'">
-        <i class="fas fa-user-plus"></i><span>Register</span>
+    <button class="nav-link" onclick="window.location.href='icon.html'">
+        <i class="fas fa-icons"></i><span>Icons</span>
     </button>
     <button class="nav-link post-create-btn" onclick="window.location.href='post.html'">
         <i class="fas fa-plus"></i><span>Post</span>
     </button>
-    <button class="nav-link" onclick="showToast('📅 Activities page coming soon!')">
-        <i class="fas fa-calendar-alt"></i><span>Activities</span>
-    </button>
     <button class="nav-link" onclick="window.location.href='account.html'">
-        <i class="fas fa-user-circle"></i><span>Account</span>
+        <i class="fas fa-user-shield"></i><span>Admin</span>
     </button>
 </nav>
 
 <div class="toast" id="toast"></div>
 
-<script src="app.js"></script>
+<!-- Admin Script Hook -->
+<script src="admin.js"></script>
 </body>
 </html>
-
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyC-PINF2AJcETYIMINiCfT0gSxLxw70vSE",
-    authDomain: "bmd-app-1aec8.firebaseapp.com",
-    projectId: "bmd-app-1aec8",
-    storageBucket: "bmd-app-1aec8.firebasestorage.app",
-    messagingSenderId: "722780031230",
-    appId: "1:722780031230:web:cd19a98e24e4d9d80dfdaf"
-};
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-const db = firebase.firestore();
-const auth = firebase.auth();
-
-let allPosts = [];
-let filteredPosts = [];
-let currentUser = null;
-let likedPostIds = new Set();
-let selectedCategory = 'all';
-
-const feedWrapper = document.getElementById('feedWrapper');
-const spotlightCard = document.getElementById('spotlightCard');
-const spotlightTitle = document.getElementById('spotlightTitle');
-const spotlightDesc = document.getElementById('spotlightDesc');
-const spotlightBtn = document.getElementById('spotlightBtn');
-const toast = document.getElementById('toast');
-
-let toastTimer;
-function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
-}
-
-auth.onAuthStateChanged(user => {
-    currentUser = user;
-    if (user) {
-        db.collection('likes')
-          .where('userId', '==', user.uid)
-          .get()
-          .then(snap => {
-              likedPostIds.clear();
-              snap.forEach(doc => likedPostIds.add(doc.data().postId));
-              renderPosts(filteredPosts);
-          });
-    } else {
-        likedPostIds.clear();
-        renderPosts(filteredPosts);
-    }
-});
-
-function listenToPosts() {
-    db.collection('posts')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot(snapshot => {
-          const posts = [];
-          snapshot.forEach(doc => {
-              const data = doc.data();
-              posts.push({
-                  id: doc.id,
-                  ...data,
-                  createdAt: data.createdAt ? data.createdAt.toDate() : new Date()
-              });
-          });
-          allPosts = posts;
-          applyCategoryFilter();
-          updateSpotlightCard();
-      }, error => {
-          console.error("Firestore error:", error);
-          showToast("⚠️ Connection issue.");
-      });
-}
-
-function applyCategoryFilter() {
-    if (selectedCategory === 'all') {
-        filteredPosts = [...allPosts];
-    } else {
-        filteredPosts = allPosts.filter(p => p.category && p.category.toLowerCase() === selectedCategory);
-    }
-    renderPosts(filteredPosts);
-}
-
-document.querySelectorAll('.category-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-        document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        selectedCategory = pill.dataset.category;
-        applyCategoryFilter();
-    });
-});
-
-function updateSpotlightCard() {
-    if (allPosts.length > 0) {
-        const topPost = allPosts[0];
-        spotlightTitle.textContent = topPost.title || 'Community Spotlight';
-        spotlightDesc.textContent = topPost.content || topPost.preview || 'Read community updates.';
-        spotlightCard.style.display = 'block';
-    } else {
-        spotlightCard.style.display = 'none';
-    }
-}
-
-function renderPosts(posts) {
-    if (!posts || posts.length === 0) {
-        feedWrapper.innerHTML = `
-            <div style="text-align:center; padding:40px; color:#666;">
-                <i class="fas fa-feather-alt" style="font-size:2rem; color:var(--bmd-gold);"></i>
-                <h3 style="margin-top:10px;">No Stories Found</h3>
-            </div>`;
-        return;
-    }
-
-    let html = '';
-    posts.forEach(post => {
-        const isLiked = likedPostIds.has(post.id);
-        const likeCount = post.likes || 0;
-        const authorName = escapeHtml(post.authorName || 'Community Voice');
-
-        let mediaHtml = '';
-        if (post.imageUrl) {
-            mediaHtml += `<div class="card-media"><img src="${post.imageUrl}" alt="Media" loading="lazy" /></div>`;
-        }
-        if (post.audioUrl) {
-            mediaHtml += `<div class="audio-wrapper"><audio controls preload="metadata"><source src="${post.audioUrl}"></audio></div>`;
-        }
-
-        html += `
-            <article class="post-card">
-                <div class="post-header-info">
-                    <div class="author-box">
-                        <span class="author-name">${authorName}</span>
-                    </div>
-                    <span class="post-date">${timeAgo(post.createdAt)}</span>
-                </div>
-                <h3 style="padding:0 14px 6px; font-family:'Playfair Display',serif;">${escapeHtml(post.title || 'Untitled')}</h3>
-                <p style="padding:0 14px 10px; font-size:0.83rem; color:#444;">${escapeHtml(post.preview || post.content?.slice(0, 140) || '')}</p>
-                ${mediaHtml}
-                <div class="post-actions">
-                    <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
-                        <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
-                        <span>${likeCount}</span>
-                    </button>
-                    <button class="action-btn share-btn" onclick="shareArticle('${post.id}')">
-                        <i class="fas fa-share-alt"></i> Share
-                    </button>
-                </div>
-            </article>`;
-    });
-
-    feedWrapper.innerHTML = html;
-}
-
-async function toggleLike(postId) {
-    if (!currentUser) {
-        showToast("🔒 Please sign in to like posts.");
-        return;
-    }
-    const post = allPosts.find(p => p.id === postId);
-    if (!post) return;
-
-    const isLiked = likedPostIds.has(postId);
-    post.likes = isLiked ? Math.max(0, (post.likes || 1) - 1) : (post.likes || 0) + 1;
-    if (isLiked) likedPostIds.delete(postId); else likedPostIds.add(postId);
-    renderPosts(filteredPosts);
-
-    try {
-        await db.collection('posts').doc(postId).update({ likes: post.likes });
-    } catch (e) { console.error(e); }
-}
-
-function shareArticle(postId) {
-    const post = allPosts.find(p => p.id === postId);
-    if (!post) return;
-    const url = window.location.href;
-    if (navigator.share) {
-        navigator.share({ title: post.title, url: url }).catch(() => {});
-    } else {
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title + ' ' + url)}`, '_blank');
-    }
-}
-
-function escapeHtml(str) { return str ? str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]) : ''; }
-function timeAgo(date) {
-    if (!date) return '';
-    const s = Math.floor((new Date() - date) / 1000);
-    if (s < 60) return 'Just now';
-    if (s < 3600) return `${Math.floor(s/60)}m ago`;
-    if (s < 86400) return `${Math.floor(s/3600)}h ago`;
-    return date.toLocaleDateString();
-}
-
-listenToPosts();
