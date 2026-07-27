@@ -569,38 +569,8 @@
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
-    <header class="app-header">
-        <div class="header-center">
-            <img src="https://res.cloudinary.com/dp81zzxlh/image/upload/v1784978097/vhaafrigchmqnqbhehft.jpg" alt="BMD Logo" class="header-logo" />
-            <div class="brand-info">
-                <h1>BUHWEJU MUST DEVELOP</h1>
-                <span class="sub">Eiraka ryabantu baburijo.</span>
-            </div>
-        </div>
-        <div class="header-right">
-            <button class="header-action-btn" id="backBtn" aria-label="Go back">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <a href="account.html" id="userProfileLink">
-                <div class="user-profile-avatar" id="headerAvatar">
-                    <i class="fas fa-user"></i>
-                </div>
-            </a>
-        </div>
-    </header>
-
-    <!-- ===== MOVING AD ===== -->
-    <div class="marquee-ad">
-        <div class="marquee-track">
-            <span><i class="fas fa-bullhorn"></i> App designed by Dr Byamukama Mentor, expert in ICT.</span>
-            <span><i class="fas fa-bullhorn"></i> App designed by Dr Byamukama Mentor, expert in ICT.</span>
-            <span><i class="fas fa-bullhorn"></i> App designed by Dr Byamukama Mentor, expert in ICT.</span>
-        </div>
-    </div>
-
-    <!-- ===== MAIN ===== -->
-    <main class="activities-container">
+    <!-- ===== MAIN CONTENT (No Header - using the app's header) ===== -->
+    <main class="activities-container" style="padding-top: 20px;">
 
         <!-- Page Header -->
         <div class="page-header">
@@ -721,30 +691,6 @@
         </div>
     </div>
 
-    <!-- ===== BOTTOM NAV ===== -->
-    <nav class="bottom-nav">
-        <button class="nav-item" data-tab="home" id="navHome">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </button>
-        <button class="nav-item" data-tab="register" id="navRegister">
-            <i class="fas fa-user-plus"></i>
-            <span>Register</span>
-        </button>
-        <button class="nav-item post-btn" data-tab="post" id="navPost">
-            <i class="fas fa-plus"></i>
-            <span style="margin-top:2px;">Post</span>
-        </button>
-        <button class="nav-item" data-tab="activities" id="navActivities">
-            <i class="fas fa-calendar-alt"></i>
-            <span>Activities</span>
-        </button>
-        <button class="nav-item" data-tab="account" id="navAccount">
-            <i class="fas fa-user-circle"></i>
-            <span>Account</span>
-        </button>
-    </nav>
-
     <!-- ===== TOAST ===== -->
     <div class="toast" id="toast"></div>
 
@@ -787,7 +733,6 @@
         const submitBtn = document.getElementById('createActivityBtn');
         const activitiesList = document.getElementById('activitiesList');
         const toast = document.getElementById('toast');
-        const headerAvatar = document.getElementById('headerAvatar');
 
         const imageInput = document.getElementById('imageInput');
         const imagePreview = document.getElementById('imagePreview');
@@ -828,18 +773,6 @@
                     window.location.href = 'account.html';
                 }, 2000);
                 return;
-            }
-
-            // Update header avatar
-            try {
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (userDoc.exists && userDoc.data().photoURL) {
-                    headerAvatar.innerHTML = `<img src="${userDoc.data().photoURL}" style="width:100%;height:100%;object-fit:cover;" />`;
-                } else if (user.photoURL) {
-                    headerAvatar.innerHTML = `<img src="${user.photoURL}" style="width:100%;height:100%;object-fit:cover;" />`;
-                }
-            } catch (e) {
-                console.error("Error fetching user profile:", e);
             }
 
             loadActivities();
@@ -1323,43 +1256,8 @@
         confirmDeleteBtn.addEventListener('click', deleteActivity);
 
         // ================================================================
-        //  NAVIGATION
+        //  NAVIGATION (Bottom Nav will be inherited from main app)
         // ================================================================
-        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const tab = item.dataset.tab;
-                document.querySelectorAll('.bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
-                item.classList.add('active');
-
-                switch (tab) {
-                    case 'home':
-                        window.location.href = 'index.html';
-                        break;
-                    case 'register':
-                        window.location.href = 'register.html';
-                        break;
-                    case 'post':
-                        window.location.href = 'post.html';
-                        break;
-                    case 'account':
-                        window.location.href = 'account.html';
-                        break;
-                    default:
-                        break;
-                }
-            });
-        });
-
-        // ================================================================
-        //  BACK BUTTON
-        // ================================================================
-        document.getElementById('backBtn').addEventListener('click', () => {
-            window.location.href = 'account.html';
-        });
-
-        headerAvatar.addEventListener('click', () => {
-            window.location.href = 'account.html';
-        });
 
         // ================================================================
         //  UTILITY
