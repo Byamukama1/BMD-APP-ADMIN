@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Activities – BMD</title>
+
+    <!-- ===== FIREBASE SDK ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
+    </script>
+
+    <!-- ===== FONTS & ICONS ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
+
+    <!-- ===== EXTERNAL STYLES ===== -->
+    <link rel="stylesheet" href="index-style.css" />
+
+    <style>
+        .activities-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 8px 16px 20px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-radius: var(--radius-lg, 18px);
+            box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.05));
+            border: 1px solid var(--border-color, #e5e7eb);
+        }
+
+        .page-header .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary, #1f2937);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header .title i {
+            color: var(--accent-gold, #d4a743);
+        }
+
+        .admin-badge {
+            font-size: 0.7rem;
+            background: var(--accent-gold, #d4a743);
+            color: #111827;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .form-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg, 18px);
+            box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.05));
+            border: 1px solid var(--border-color, #e5e7eb);
+            padding: 20px 18px 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-card .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary, #1f2937);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-card .form-title i {
+            color: var(--accent-gold, #d4a743);
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-primary, #1f2937);
+            margin-bottom: 3px;
+        }
+
+        .form-group label .required {
+            color: #e74c3c;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border-color, #e5e7eb);
+            border-radius: var(--radius-md, 12px);
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            background: #fcfcf9;
+            transition: border 0.25s, box-shadow 0.25s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent-gold, #d4a743);
+            box-shadow: 0 0 0 4px rgba(212, 167, 67, 0.12);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .image-upload-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-md, 12px);
+            background: #e8e0d4;
+            border: 2px solid var(--accent-gold, #d4a743);
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #bbb;
+            object-fit: cover;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-upload-btn {
+            background: var(--text-primary, #1f2937);
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: var(--radius-md, 12px);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .image-upload-btn:active {
+            background: #374151;
+        }
+
+        .image-upload-btn .file-name {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 400;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-gold, #d4a743);
+            color: #111827;
+            border: none;
+            border-radius: var(--radius-md, 12px);
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 4px 16px rgba(212, 167, 67, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.97);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .submit-status {
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+            padding: 8px 0;
+            min-height: 24px;
+        }
+
+        .submit-status.error {
+            color: #e74c3c;
+        }
+        .submit-status.success {
+            color: #27ae60;
+        }
+
+        /* ===== ACTIVITY CARDS ===== */
+        .activity-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg, 18px);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.05));
+            border: 1px solid var(--border-color, #e5e7eb);
+            overflow: hidden;
+            transition: box-shadow 0.2s ease, transform 0.15s ease;
+        }
+
+        .activity-card:hover {
+            box-shadow: var(--shadow-md, 0 6px 20px rgba(0,0,0,0.08));
+        }
+
+        .activity-card .activity-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #e8e0d4;
+        }
+
+        .activity-card .activity-body {
+            padding: 16px;
+        }
+
+        .activity-card .activity-title {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary, #1f2937);
+            margin-bottom: 4px;
+        }
+
+        .activity-card .activity-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .activity-card .activity-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .activity-card .activity-meta i {
+            color: var(--accent-gold, #d4a743);
+        }
+
+        .activity-card .activity-desc {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #555;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .activity-card .activity-actions {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            border-top: 1px solid #f3f4f6;
+            background: #fafafa;
+            flex-wrap: wrap;
+        }
+
+        .activity-card .activity-actions .btn-action {
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary, #4b5563);
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: background 0.15s, color 0.15s;
+            font-family: inherit;
+        }
+
+        .activity-card .activity-actions .btn-action:hover {
+            background: #f3f4f6;
+        }
+
+        .activity-card .activity-actions .btn-action i {
+            font-size: 0.9rem;
+        }
+
+        .activity-card .activity-actions .btn-action.edit-btn {
+            color: var(--accent-gold, #d4a743);
+        }
+
+        .activity-card .activity-actions .btn-action.delete-btn {
+            color: #e74c3c;
+        }
+
+        .activity-card .activity-actions .btn-action:active {
+            transform: scale(0.95);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            background: #ffffff;
+            border-radius: var(--radius-lg, 18px);
+            border: 1px solid var(--border-color, #e5e7eb);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #111827;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 5000;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .skeleton {
+            background: #e8e0d4;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 16px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .skeleton .skeleton-image {
+            height: 180px;
+            background: #d5cdc0;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+        }
+
+        .skeleton .skeleton-line {
+            height: 14px;
+            background: #d5cdc0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton .skeleton-line.short {
+            width: 60%;
+        }
+        .skeleton .skeleton-line.med {
+            width: 80%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .activities-container {
+                padding: 6px 10px 12px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-row .form-group {
+                margin-bottom: 14px;
+            }
+            .page-header {
+                flex-direction: column;
+                gap: 6px;
+                text-align: center;
+            }
+            .page-header .title {
+                font-size: 1rem;
+            }
+            .activity-card .activity-image {
+                height: 140px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .activities-container {
+                padding: 12px 24px 30px;
+            }
+        }
+
+        .delete-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .delete-overlay.active {
+            display: flex;
+        }
+
+        .delete-modal {
+            background: #fff;
+            border-radius: var(--radius-lg, 18px);
+            max-width: 380px;
+            width: 100%;
+            padding: 24px 20px 28px;
+            animation: slideUp 0.25s ease;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+        }
+
+        .delete-modal .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary, #1f2937);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .delete-modal .modal-text {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .delete-modal .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .delete-modal .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-md, 12px);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.15s;
+        }
+
+        .delete-modal .modal-actions button:active {
+            transform: scale(0.95);
+        }
+
+        .delete-modal .btn-cancel {
+            background: #f3f4f6;
+            color: #555;
+        }
+
+        .delete-modal .btn-confirm-delete {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="app-header">
+        <div class="header-center">
+            <img src="https://res.cloudinary.com/dp81zzxlh/image/upload/v1784978097/vhaafrigchmqnqbhehft.jpg" alt="BMD Logo" class="header-logo" />
+            <div class="brand-info">
+                <h1>BUHWEJU MUST DEVELOP</h1>
+                <span class="sub">Eiraka ryabantu baburijo.</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="header-action-btn" id="backBtn" aria-label="Go back">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <a href="account.html" id="userProfileLink">
+                <div class="user-profile-avatar" id="headerAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <!-- ===== MOVING AD ===== -->
+    <div class="marquee-ad">
+        <div class="marquee-track">
+            <span><i class="fas fa-bullhorn"></i> App designed by Dr Byamukama Mentor, expert in ICT.</span>
+            <span><i class="fas fa-bullhorn"></i> App designed by Dr Byamukama Mentor, expert in ICT.</span>
+            <span><i class="fas fa-bullhorn"></i> App designed by Dr Byamukama Mentor, expert in ICT.</span>
+        </div>
+    </div>
+
+    <!-- ===== MAIN ===== -->
+    <main class="activities-container">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="title">
+                <i class="fas fa-calendar-alt"></i> Activities
+            </div>
+            <span class="admin-badge"><i class="fas fa-user-shield"></i> Admin</span>
+        </div>
+
+        <!-- ===== CREATE ACTIVITY FORM ===== -->
+        <div class="form-card">
+            <div class="form-title">
+                <i class="fas fa-plus-circle"></i> Create New Activity
+            </div>
+
+            <form id="activityForm" novalidate>
+                <!-- Activity Title -->
+                <div class="form-group">
+                    <label for="activityTitle">Activity Title <span class="required">*</span></label>
+                    <input type="text" id="activityTitle" placeholder="e.g. Community Football Match, BMD Meeting" required />
+                </div>
+
+                <!-- Activity Type -->
+                <div class="form-group">
+                    <label for="activityType">Activity Type <span class="required">*</span></label>
+                    <select id="activityType" required>
+                        <option value="">Select type...</option>
+                        <option value="meeting">Meeting</option>
+                        <option value="sports">Sports / Football</option>
+                        <option value="workshop">Workshop / Training</option>
+                        <option value="community">Community Event</option>
+                        <option value="fundraising">Fundraising</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="activityDesc">Description <span class="required">*</span></label>
+                    <textarea id="activityDesc" rows="3" placeholder="Describe the activity, what it's about, who should attend..." required></textarea>
+                </div>
+
+                <!-- Date and Time -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="activityDate">Date <span class="required">*</span></label>
+                        <input type="date" id="activityDate" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="activityTime">Time <span class="required">*</span></label>
+                        <input type="time" id="activityTime" required />
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="form-group">
+                    <label for="activityLocation">Location <span class="required">*</span></label>
+                    <input type="text" id="activityLocation" placeholder="e.g. Buhweju Playground, Kyahenda Hall" required />
+                </div>
+
+                <!-- Contact Person -->
+                <div class="form-group">
+                    <label for="activityContact">Contact Person</label>
+                    <input type="text" id="activityContact" placeholder="Name and phone number of contact person" />
+                </div>
+
+                <!-- Poster Image -->
+                <div class="form-group">
+                    <label>Poster Image</label>
+                    <div class="image-upload-wrapper">
+                        <div class="image-preview" id="imagePreview">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <button type="button" class="image-upload-btn" id="imageUploadBtn">
+                            <i class="fas fa-upload"></i>
+                            <span class="file-name" id="imageFileName">Upload Poster</span>
+                        </button>
+                        <input type="file" id="imageInput" class="hidden-input" accept="image/*" />
+                    </div>
+                    <div style="font-size:0.7rem; color:#999; margin-top:4px;">Optional: Upload a poster or flyer for the activity</div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="submit-btn" id="createActivityBtn">
+                    <i class="fas fa-calendar-plus"></i> Create Activity
+                </button>
+                <div class="submit-status" id="activityStatus"></div>
+            </form>
+        </div>
+
+        <!-- ===== ACTIVITIES LIST ===== -->
+        <div id="activitiesList">
+            <!-- Loading skeleton -->
+            <div class="skeleton">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-line med"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+            <div class="skeleton">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-line med"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== DELETE CONFIRM MODAL ===== -->
+    <div class="delete-overlay" id="deleteOverlay">
+        <div class="delete-modal">
+            <div class="modal-title">Delete Activity?</div>
+            <div class="modal-text">Are you sure you want to delete this activity? This action cannot be undone.</div>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn-confirm-delete" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <nav class="bottom-nav">
+        <button class="nav-item" data-tab="home" id="navHome">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-item" data-tab="register" id="navRegister">
+            <i class="fas fa-user-plus"></i>
+            <span>Register</span>
+        </button>
+        <button class="nav-item post-btn" data-tab="post" id="navPost">
+            <i class="fas fa-plus"></i>
+            <span style="margin-top:2px;">Post</span>
+        </button>
+        <button class="nav-item" data-tab="activities" id="navActivities">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Activities</span>
+        </button>
+        <button class="nav-item" data-tab="account" id="navAccount">
+            <i class="fas fa-user-circle"></i>
+            <span>Account</span>
+        </button>
+    </nav>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ============================================================ -->
+    <!-- ===== FIREBASE + APP LOGIC ===== -->
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        //  FIREBASE CONFIG
+        // ================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-PINF2AJcETYIMINiCfT0gSxLxw70vSE",
+            authDomain: "bmd-app-1aec8.firebaseapp.com",
+            projectId: "bmd-app-1aec8",
+            storageBucket: "bmd-app-1aec8.firebasestorage.app",
+            messagingSenderId: "722780031230",
+            appId: "1:722780031230:web:cd19a98e24e4d9d80dfdaf",
+            measurementId: "G-WPEG8SQSW7"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // ================================================================
+        //  CLOUDINARY
+        // ================================================================
+        const CLOUD_NAME = 'dp81zzxlh';
+        const UPLOAD_PRESET = 'Unsigned upload';
+        const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
+
+        // ================================================================
+        //  DOM REFS
+        // ================================================================
+        const form = document.getElementById('activityForm');
+        const statusEl = document.getElementById('activityStatus');
+        const submitBtn = document.getElementById('createActivityBtn');
+        const activitiesList = document.getElementById('activitiesList');
+        const toast = document.getElementById('toast');
+        const headerAvatar = document.getElementById('headerAvatar');
+
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const imageFileName = document.getElementById('imageFileName');
+
+        // Delete modal
+        const deleteOverlay = document.getElementById('deleteOverlay');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        let currentUser = null;
+        let uploadedImageUrl = null;
+        let isUploading = false;
+        let deleteActivityId = null;
+        let allActivities = [];
+
+        // ================================================================
+        //  TOAST
+        // ================================================================
+        let toastTimer = null;
+
+        function showToast(msg, duration = 2800) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        // ================================================================
+        //  AUTH STATE LISTENER
+        // ================================================================
+        auth.onAuthStateChanged(async (user) => {
+            currentUser = user;
+
+            if (!user) {
+                showToast('Please sign in to manage activities.', 3000);
+                setTimeout(() => {
+                    window.location.href = 'account.html';
+                }, 2000);
+                return;
+            }
+
+            // Update header avatar
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists && userDoc.data().photoURL) {
+                    headerAvatar.innerHTML = `<img src="${userDoc.data().photoURL}" style="width:100%;height:100%;object-fit:cover;" />`;
+                } else if (user.photoURL) {
+                    headerAvatar.innerHTML = `<img src="${user.photoURL}" style="width:100%;height:100%;object-fit:cover;" />`;
+                }
+            } catch (e) {
+                console.error("Error fetching user profile:", e);
+            }
+
+            loadActivities();
+        });
+
+        // ================================================================
+        //  IMAGE UPLOAD
+        // ================================================================
+        document.getElementById('imageUploadBtn').addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        imageInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                imagePreview.innerHTML = `<img src="${event.target.result}" alt="Preview" />`;
+            };
+            reader.readAsDataURL(file);
+
+            imageFileName.textContent = file.name;
+            isUploading = true;
+            showToast('⏳ Uploading image...', 2000);
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', UPLOAD_PRESET);
+
+                const response = await fetch(CLOUDINARY_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error?.message || 'Upload failed');
+                }
+
+                const data = await response.json();
+                uploadedImageUrl = data.secure_url;
+                isUploading = false;
+                showToast('✅ Poster uploaded successfully!', 2000);
+
+            } catch (err) {
+                console.error('Upload error:', err);
+                showToast('❌ Image upload failed: ' + err.message, 3000);
+                uploadedImageUrl = null;
+                imagePreview.innerHTML = `<i class="fas fa-image"></i>`;
+                imageFileName.textContent = 'Upload Poster';
+                imageInput.value = '';
+                isUploading = false;
+            }
+        });
+
+        // ================================================================
+        //  CREATE ACTIVITY
+        // ================================================================
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('activityTitle').value.trim();
+            const type = document.getElementById('activityType').value;
+            const description = document.getElementById('activityDesc').value.trim();
+            const date = document.getElementById('activityDate').value;
+            const time = document.getElementById('activityTime').value;
+            const location = document.getElementById('activityLocation').value.trim();
+            const contact = document.getElementById('activityContact').value.trim();
+
+            // Validation
+            if (!title || !type || !description || !date || !time || !location) {
+                statusEl.textContent = '⚠️ Please fill all required fields.';
+                statusEl.className = 'submit-status error';
+                return;
+            }
+
+            if (isUploading) {
+                statusEl.textContent = '⏳ Please wait for the image to finish uploading.';
+                statusEl.className = 'submit-status error';
+                return;
+            }
+
+            statusEl.textContent = '';
+            statusEl.className = 'submit-status';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Creating...';
+
+            try {
+                const activityData = {
+                    title: title,
+                    type: type,
+                    description: description,
+                    date: date,
+                    time: time,
+                    location: location,
+                    contact: contact || '',
+                    imageUrl: uploadedImageUrl || null,
+                    createdBy: currentUser.uid,
+                    createdByName: currentUser.displayName || currentUser.email || 'Admin',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('activities').add(activityData);
+
+                statusEl.textContent = '✅ Activity created successfully!';
+                statusEl.className = 'submit-status success';
+                showToast('🎉 Activity created!', 2500);
+
+                // Reset form
+                form.reset();
+                uploadedImageUrl = null;
+                imagePreview.innerHTML = `<i class="fas fa-image"></i>`;
+                imageFileName.textContent = 'Upload Poster';
+                imageInput.value = '';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-calendar-plus"></i> Create Activity';
+
+                // Reload activities
+                loadActivities();
+
+            } catch (err) {
+                console.error('Create activity error:', err);
+                statusEl.textContent = '❌ Failed to create activity: ' + err.message;
+                statusEl.className = 'submit-status error';
+                showToast('❌ Error creating activity.', 3000);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-calendar-plus"></i> Create Activity';
+            }
+        });
+
+        // ================================================================
+        //  LOAD ACTIVITIES
+        // ================================================================
+        function loadActivities() {
+            db.collection('activities')
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(snapshot => {
+                    const activities = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        activities.push({
+                            id: doc.id,
+                            ...data,
+                            createdAt: data.createdAt ? data.createdAt.toDate() : new Date()
+                        });
+                    });
+                    allActivities = activities;
+                    renderActivities(activities);
+                }, error => {
+                    console.error('Error loading activities:', error);
+                    showToast('Error loading activities.', 3000);
+                    activitiesList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Error Loading Activities</h3>
+                            <p>Please refresh the page to try again.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        // ================================================================
+        //  RENDER ACTIVITIES
+        // ================================================================
+        function renderActivities(activities) {
+            if (!activities.length) {
+                activitiesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>No Activities Yet</h3>
+                        <p>Create your first activity using the form above.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            activities.forEach(activity => {
+                const dateStr = activity.date ? new Date(activity.date + 'T' + (activity.time || '00:00')).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+                const timeStr = activity.time || 'N/A';
+
+                let imageHtml = '';
+                if (activity.imageUrl) {
+                    imageHtml = `<img src="${activity.imageUrl}" alt="${activity.title}" class="activity-image" />`;
+                } else {
+                    imageHtml = `<div class="activity-image" style="display:flex; align-items:center; justify-content:center; background:#f0ebe4; color:#999; font-size:1.2rem;"><i class="fas fa-calendar-alt" style="font-size:2.5rem;"></i></div>`;
+                }
+
+                const typeLabels = {
+                    'meeting': 'Meeting',
+                    'sports': 'Sports',
+                    'workshop': 'Workshop',
+                    'community': 'Community Event',
+                    'fundraising': 'Fundraising',
+                    'other': 'Other'
+                };
+                const typeLabel = typeLabels[activity.type] || activity.type;
+
+                html += `
+                    <div class="activity-card" data-id="${activity.id}">
+                        ${imageHtml}
+                        <div class="activity-body">
+                            <div class="activity-title">${escapeHtml(activity.title)}</div>
+                            <div class="activity-meta">
+                                <span><i class="fas fa-tag"></i> ${escapeHtml(typeLabel)}</span>
+                                <span><i class="fas fa-calendar-day"></i> ${escapeHtml(dateStr)}</span>
+                                <span><i class="fas fa-clock"></i> ${escapeHtml(timeStr)}</span>
+                                <span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(activity.location)}</span>
+                            </div>
+                            <div class="activity-desc">${escapeHtml(activity.description)}</div>
+                            ${activity.contact ? `<div style="font-size:0.75rem; color:#888; margin-top:6px;"><i class="fas fa-user"></i> Contact: ${escapeHtml(activity.contact)}</div>` : ''}
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn-action edit-btn" onclick="editActivity('${activity.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-action delete-btn" onclick="confirmDelete('${activity.id}')">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            activitiesList.innerHTML = html;
+        }
+
+        // ================================================================
+        //  EDIT ACTIVITY
+        // ================================================================
+        function editActivity(activityId) {
+            const activity = allActivities.find(a => a.id === activityId);
+            if (!activity) return;
+
+            // Fill the form with activity data
+            document.getElementById('activityTitle').value = activity.title || '';
+            document.getElementById('activityType').value = activity.type || '';
+            document.getElementById('activityDesc').value = activity.description || '';
+            document.getElementById('activityDate').value = activity.date || '';
+            document.getElementById('activityTime').value = activity.time || '';
+            document.getElementById('activityLocation').value = activity.location || '';
+            document.getElementById('activityContact').value = activity.contact || '';
+
+            // Show image preview if exists
+            if (activity.imageUrl) {
+                uploadedImageUrl = activity.imageUrl;
+                imagePreview.innerHTML = `<img src="${activity.imageUrl}" alt="Poster" />`;
+                imageFileName.textContent = 'Change Image';
+            }
+
+            // Change button text
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Activity';
+
+            // Store the ID for update
+            submitBtn.dataset.editId = activityId;
+
+            // Scroll to form
+            document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Change submit handler for update
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                await updateActivity(activityId);
+            };
+        }
+
+        // ================================================================
+        //  UPDATE ACTIVITY
+        // ================================================================
+        async function updateActivity(activityId) {
+            const title = document.getElementById('activityTitle').value.trim();
+            const type = document.getElementById('activityType').value;
+            const description = document.getElementById('activityDesc').value.trim();
+            const date = document.getElementById('activityDate').value;
+            const time = document.getElementById('activityTime').value;
+            const location = document.getElementById('activityLocation').value.trim();
+            const contact = document.getElementById('activityContact').value.trim();
+
+            if (!title || !type || !description || !date || !time || !location) {
+                statusEl.textContent = '⚠️ Please fill all required fields.';
+                statusEl.className = 'submit-status error';
+                return;
+            }
+
+            if (isUploading) {
+                statusEl.textContent = '⏳ Please wait for the image to finish uploading.';
+                statusEl.className = 'submit-status error';
+                return;
+            }
+
+            statusEl.textContent = '';
+            statusEl.className = 'submit-status';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Updating...';
+
+            try {
+                const updateData = {
+                    title: title,
+                    type: type,
+                    description: description,
+                    date: date,
+                    time: time,
+                    location: location,
+                    contact: contact || '',
+                    imageUrl: uploadedImageUrl || null,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('activities').doc(activityId).update(updateData);
+
+                statusEl.textContent = '✅ Activity updated successfully!';
+                statusEl.className = 'submit-status success';
+                showToast('✅ Activity updated!', 2500);
+
+                // Reset form
+                form.reset();
+                uploadedImageUrl = null;
+                imagePreview.innerHTML = `<i class="fas fa-image"></i>`;
+                imageFileName.textContent = 'Upload Poster';
+                imageInput.value = '';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-calendar-plus"></i> Create Activity';
+                delete submitBtn.dataset.editId;
+
+                // Reset form submit handler
+                form.onsubmit = async (e) => {
+                    e.preventDefault();
+                    await createActivity();
+                };
+
+                loadActivities();
+
+            } catch (err) {
+                console.error('Update error:', err);
+                statusEl.textContent = '❌ Failed to update: ' + err.message;
+                statusEl.className = 'submit-status error';
+                showToast('❌ Error updating activity.', 3000);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Activity';
+            }
+        }
+
+        // ================================================================
+        //  CREATE ACTIVITY (default handler)
+        // ================================================================
+        async function createActivity() {
+            const title = document.getElementById('activityTitle').value.trim();
+            const type = document.getElementById('activityType').value;
+            const description = document.getElementById('activityDesc').value.trim();
+            const date = document.getElementById('activityDate').value;
+            const time = document.getElementById('activityTime').value;
+            const location = document.getElementById('activityLocation').value.trim();
+            const contact = document.getElementById('activityContact').value.trim();
+
+            if (!title || !type || !description || !date || !time || !location) {
+                statusEl.textContent = '⚠️ Please fill all required fields.';
+                statusEl.className = 'submit-status error';
+                return;
+            }
+
+            if (isUploading) {
+                statusEl.textContent = '⏳ Please wait for the image to finish uploading.';
+                statusEl.className = 'submit-status error';
+                return;
+            }
+
+            statusEl.textContent = '';
+            statusEl.className = 'submit-status';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Creating...';
+
+            try {
+                const activityData = {
+                    title: title,
+                    type: type,
+                    description: description,
+                    date: date,
+                    time: time,
+                    location: location,
+                    contact: contact || '',
+                    imageUrl: uploadedImageUrl || null,
+                    createdBy: currentUser.uid,
+                    createdByName: currentUser.displayName || currentUser.email || 'Admin',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('activities').add(activityData);
+
+                statusEl.textContent = '✅ Activity created successfully!';
+                statusEl.className = 'submit-status success';
+                showToast('🎉 Activity created!', 2500);
+
+                form.reset();
+                uploadedImageUrl = null;
+                imagePreview.innerHTML = `<i class="fas fa-image"></i>`;
+                imageFileName.textContent = 'Upload Poster';
+                imageInput.value = '';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-calendar-plus"></i> Create Activity';
+
+                loadActivities();
+
+            } catch (err) {
+                console.error('Create error:', err);
+                statusEl.textContent = '❌ Failed to create: ' + err.message;
+                statusEl.className = 'submit-status error';
+                showToast('❌ Error creating activity.', 3000);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-calendar-plus"></i> Create Activity';
+            }
+        }
+
+        // Reset form to create mode
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            if (submitBtn.dataset.editId) {
+                await updateActivity(submitBtn.dataset.editId);
+            } else {
+                await createActivity();
+            }
+        };
+
+        // ================================================================
+        //  CONFIRM DELETE
+        // ================================================================
+        function confirmDelete(activityId) {
+            deleteActivityId = activityId;
+            deleteOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ================================================================
+        //  DELETE ACTIVITY
+        // ================================================================
+        async function deleteActivity() {
+            if (!deleteActivityId) return;
+
+            const btn = confirmDeleteBtn;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Deleting...';
+
+            try {
+                await db.collection('activities').doc(deleteActivityId).delete();
+                showToast('✅ Activity deleted successfully!');
+                deleteOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                deleteActivityId = null;
+                btn.disabled = false;
+                btn.innerHTML = 'Delete';
+                loadActivities();
+            } catch (err) {
+                console.error('Delete error:', err);
+                showToast('❌ Failed to delete: ' + err.message);
+                btn.disabled = false;
+                btn.innerHTML = 'Delete';
+            }
+        }
+
+        // ================================================================
+        //  DELETE MODAL EVENTS
+        // ================================================================
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            deleteActivityId = null;
+        });
+
+        deleteOverlay.addEventListener('click', (e) => {
+            if (e.target === deleteOverlay) {
+                deleteOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                deleteActivityId = null;
+            }
+        });
+
+        confirmDeleteBtn.addEventListener('click', deleteActivity);
+
+        // ================================================================
+        //  NAVIGATION
+        // ================================================================
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const tab = item.dataset.tab;
+                document.querySelectorAll('.bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+
+                switch (tab) {
+                    case 'home':
+                        window.location.href = 'index.html';
+                        break;
+                    case 'register':
+                        window.location.href = 'register.html';
+                        break;
+                    case 'post':
+                        window.location.href = 'post.html';
+                        break;
+                    case 'account':
+                        window.location.href = 'account.html';
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+
+        // ================================================================
+        //  BACK BUTTON
+        // ================================================================
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.location.href = 'account.html';
+        });
+
+        headerAvatar.addEventListener('click', () => {
+            window.location.href = 'account.html';
+        });
+
+        // ================================================================
+        //  UTILITY
+        // ================================================================
+        function escapeHtml(str) {
+            return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        console.log('📅 BMD Activities page loaded.');
+    </script>
+
+</body>
+</html>
