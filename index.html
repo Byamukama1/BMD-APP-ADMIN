@@ -13,408 +13,1091 @@
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+
+    <!-- ===== EXTERNAL STYLES ===== -->
+    <link rel="stylesheet" href="index-style.css" />
 
     <style>
+        /* ===== ADMIN DASHBOARD STYLES ===== */
+        :root {
+            --bmd-dark: #0f261b;
+            --bmd-primary: #1a3c2a;
+            --bmd-primary-light: #2a5a3e;
+            --bmd-gold: #d4a743;
+            --bmd-gold-light: #f0d080;
+            --bmd-cream: #faf6ed;
+            --bmd-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background: #f4f6f5;
+            padding-top: calc(var(--header-height, 72px) + var(--ad-height, 34px) + 12px);
+            padding-bottom: calc(var(--nav-height, 64px) + 24px);
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 8px 16px 20px;
+        }
+
+        /* ===== SUMMARY CARDS ===== */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg, 18px);
+            padding: 18px 16px;
+            box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.05));
+            border: 1px solid var(--border-color, #e5e7eb);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md, 0 6px 20px rgba(0,0,0,0.08));
+        }
+
+        .summary-card .icon {
+            font-size: 1.8rem;
+            color: var(--accent-gold, #d4a743);
+            margin-bottom: 4px;
+        }
+
+        .summary-card .number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary, #1f2937);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .summary-card .label {
+            font-size: 0.7rem;
+            color: var(--text-muted, #6b7280);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .summary-card .sub-label {
+            font-size: 0.6rem;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* ===== ADMIN HEADER ===== */
+        .admin-header {
+            background: linear-gradient(135deg, #0d1b12, #142e1f);
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: var(--radius-lg, 18px);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border: 1px solid var(--accent-gold, #d4a743);
+        }
+
+        .admin-header .brand h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent-gold-light, #f0d080);
+            margin: 0;
+        }
+
+        .admin-header .brand .sub {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .admin-header .actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .admin-header .actions .header-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.15s, opacity 0.15s;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .admin-header .actions .header-btn:active {
+            transform: scale(0.95);
+        }
+
+        .admin-header .actions .header-btn.gold {
+            background: var(--accent-gold, #d4a743);
+            color: #111827;
+        }
+
+        .admin-header .actions .header-btn.primary {
+            background: var(--text-primary, #1f2937);
+            color: #fff;
+        }
+
+        .admin-header .actions .header-btn.green {
+            background: #27ae60;
+            color: #fff;
+        }
+
+        .admin-header .actions .header-btn.danger {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        /* ===== POST CARD ===== */
         .admin-post-card {
             background: #ffffff;
-            border-radius: 14px;
+            border-radius: var(--radius-lg, 18px);
             padding: 16px;
             margin-bottom: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border: 1px solid #e5ebe7;
-            transition: transform 0.15s ease;
+            box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.05));
+            border: 1px solid var(--border-color, #e5e7eb);
+            transition: border-color 0.2s, transform 0.15s;
         }
+
         .admin-post-card:hover {
-            border-color: var(--bmd-gold);
+            border-color: var(--accent-gold, #d4a743);
         }
-        .post-media-preview {
+
+        .admin-post-card .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .admin-post-card .post-author {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary, #1f2937);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-post-card .post-author i {
+            color: var(--accent-gold, #d4a743);
+        }
+
+        .admin-post-card .post-category {
+            font-size: 0.6rem;
+            background: #e8e0d2;
+            color: var(--text-primary, #1f2937);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .admin-post-card .post-likes {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #e74c3c;
+            background: #fdeae8;
+            padding: 4px 10px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .admin-post-card .post-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary, #1f2937);
+            margin-bottom: 4px;
+        }
+
+        .admin-post-card .post-content {
+            font-size: 0.85rem;
+            color: #444;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .admin-post-card .post-media-preview {
             width: 100%;
-            max-height: 240px;
+            max-height: 220px;
             object-fit: cover;
-            border-radius: 10px;
-            margin: 10px 0;
+            border-radius: var(--radius-md, 12px);
+            margin: 8px 0;
             background: #111;
         }
+
+        .admin-post-card .post-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .admin-post-card .post-actions .btn-action {
+            padding: 7px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.15s, opacity 0.15s;
+            font-family: inherit;
+        }
+
+        .admin-post-card .post-actions .btn-action:active {
+            transform: scale(0.95);
+        }
+
+        .admin-post-card .post-actions .btn-action.edit {
+            background: var(--accent-gold, #d4a743);
+            color: #111827;
+        }
+
+        .admin-post-card .post-actions .btn-action.delete {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .admin-post-card .post-actions .btn-action.view {
+            background: #3b82f6;
+            color: #fff;
+        }
+
+        /* ===== SEARCH BAR ===== */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 2px solid var(--border-color, #e5e7eb);
+            border-radius: var(--radius-md, 12px);
+            font-size: 0.85rem;
+            font-family: inherit;
+            outline: none;
+            min-width: 150px;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--accent-gold, #d4a743);
+        }
+
+        .search-bar .post-count-badge {
+            background: var(--accent-gold, #d4a743);
+            color: #111827;
+            font-weight: 800;
+            font-size: 0.75rem;
+            padding: 4px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        /* ===== MODAL ===== */
         .modal-backdrop {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.75);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
             z-index: 3000;
             align-items: center;
             justify-content: center;
             padding: 16px;
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(4px);
         }
+
+        .modal-backdrop.active {
+            display: flex;
+        }
+
         .modal-content {
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: var(--radius-lg, 18px);
             width: 100%;
             max-width: 550px;
-            padding: 22px;
+            padding: 24px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.25s ease;
         }
-        .form-group {
-            margin-bottom: 12px;
+
+        .modal-content .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
-        .form-group label {
+
+        .modal-content .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary, #1f2937);
+            margin: 0;
+        }
+
+        .modal-content .modal-header h3 i {
+            color: var(--accent-gold, #d4a743);
+        }
+
+        .modal-content .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+
+        .modal-content .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-content .form-group {
+            margin-bottom: 14px;
+        }
+
+        .modal-content .form-group label {
             display: block;
             font-size: 0.75rem;
             font-weight: 700;
-            color: #444;
+            color: var(--text-primary, #1f2937);
             margin-bottom: 4px;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
-        .form-control {
+
+        .modal-content .form-group .form-control {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            padding: 10px 12px;
+            border: 2px solid var(--border-color, #e5e7eb);
+            border-radius: var(--radius-md, 12px);
             font-size: 0.9rem;
             font-family: inherit;
+            outline: none;
+            background: #fcfcf9;
+            transition: border-color 0.2s;
+        }
+
+        .modal-content .form-group .form-control:focus {
+            border-color: var(--accent-gold, #d4a743);
+        }
+
+        .modal-content .form-group .form-control textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-content .current-image-wrapper {
+            display: none;
+            margin-bottom: 12px;
+        }
+
+        .modal-content .current-image-wrapper label {
+            font-size: 0.72rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .modal-content .current-image-wrapper img {
+            width: 100%;
+            max-height: 160px;
+            object-fit: cover;
+            border-radius: var(--radius-md, 12px);
+            margin-top: 4px;
+            background: #ddd;
+        }
+
+        .modal-content .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .modal-content .modal-actions .btn-cancel {
+            padding: 10px 20px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: var(--radius-md, 12px);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .modal-content .modal-actions .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        .modal-content .modal-actions .btn-save {
+            padding: 10px 20px;
+            background: var(--accent-gold, #d4a743);
+            color: #111827;
+            border: none;
+            border-radius: var(--radius-md, 12px);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .modal-content .modal-actions .btn-save:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .modal-content .upload-status {
+            font-size: 0.75rem;
+            color: var(--accent-gold, #d4a743);
+            margin-top: 4px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: #ffffff;
+            border-radius: var(--radius-lg, 18px);
+            border: 1px solid var(--border-color, #e5e7eb);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #111827;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 5000;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .admin-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .admin-header .actions {
+                justify-content: center;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .admin-post-card .post-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .admin-container {
+                padding: 12px 24px 30px;
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
-<body style="background-color: #f4f6f5;">
+<body>
 
-<!-- Admin Header -->
-<header class="app-header" style="background: linear-gradient(135deg, #0d1b12, #142e1f);">
-    <div class="brand">
-        <h1>BMD ADMIN PANEL</h1>
-        <span class="sub">Control & Management Center</span>
-    </div>
-    <div class="actions">
-        <button class="header-icon-btn" onclick="window.location.href='icon.html'" title="Icons"><i class="fas fa-icons"></i></button>
-    </div>
-</header>
-
-<!-- Top Navigation Bar -->
-<div style="display: flex; gap: 8px; padding: 12px 16px; background: #ffffff; border-bottom: 1px solid #e0e0e0; overflow-x: auto; white-space: nowrap;">
-    <button onclick="window.location.href='users.html'" style="padding: 8px 16px; background: var(--bmd-primary); color: #fff; border: none; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-        <i class="fas fa-users"></i> Users Panel
-    </button>
-    <button onclick="window.location.href='1000likes.html'" style="padding: 8px 16px; background: var(--bmd-gold); color: var(--bmd-dark); border: none; border-radius: 20px; font-size: 0.78rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-        <i class="fas fa-heart"></i> 1000 Likes Club
-    </button>
-    <button onclick="window.location.href='icon.html'" style="padding: 8px 16px; background: #e8e0d2; color: var(--bmd-primary-dark); border: none; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-        <i class="fas fa-icons"></i> Icon Panel
-    </button>
-    <button onclick="window.location.href='post.html'" style="padding: 8px 16px; background: #27ae60; color: #fff; border: none; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-left: auto;">
-        <i class="fas fa-plus"></i> Create Post
-    </button>
-</div>
-
-<!-- Main Feed Layout -->
-<main class="feed-container" style="max-width: 800px; margin: 16px auto; padding: 0 12px;">
-    
-    <!-- Quick Search & Counter Header -->
-    <div style="display: flex; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <h3 style="font-size: 1.1rem; font-family: 'Playfair Display', serif; color: var(--bmd-primary); margin: 0;">Live Posts</h3>
-            <span id="postCountBadge" style="background: var(--bmd-gold); color: var(--bmd-dark); font-weight: 800; font-size: 0.75rem; padding: 3px 12px; border-radius: 12px;">0 Posts</span>
+    <!-- ===== ADMIN HEADER ===== -->
+    <header class="admin-header">
+        <div class="brand">
+            <h1><i class="fas fa-shield-alt" style="color:var(--accent-gold);"></i> BMD ADMIN PANEL</h1>
+            <div class="sub">Control & Management Center</div>
         </div>
-        <input type="text" id="adminSearchInput" onkeyup="filterPosts()" placeholder="🔍 Search posts or author..." style="padding: 8px 14px; border: 1px solid #ccc; border-radius: 20px; font-size: 0.82rem; width: 240px;" />
-    </div>
-
-    <!-- Live Firestore Posts Feed -->
-    <div id="adminPostsFeed">
-        <div style="text-align:center; padding:40px; color:#666;">
-            <i class="fas fa-spinner fa-spin" style="font-size: 1.8rem; color: var(--bmd-gold);"></i>
-            <p style="margin-top:10px; font-size: 0.9rem;">Fetching live database posts...</p>
+        <div class="actions">
+            <a href="users.html" class="header-btn primary"><i class="fas fa-users"></i> Users</a>
+            <a href="activities.html" class="header-btn gold"><i class="fas fa-calendar-alt"></i> Activities</a>
+            <a href="post.html" class="header-btn green"><i class="fas fa-plus"></i> New Post</a>
+            <a href="index.html" class="header-btn danger"><i class="fas fa-home"></i> Site</a>
         </div>
-    </div>
-</main>
+    </header>
 
-<!-- Popup Modal for Editing Posts -->
-<div id="editModal" class="modal-backdrop">
-    <div class="modal-content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <h3 style="color:var(--bmd-primary); font-size:1.15rem; margin:0;"><i class="fas fa-edit"></i> Edit Firestore Post</h3>
-            <button onclick="closeEditModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:#888;">&times;</button>
+    <!-- ===== MAIN CONTAINER ===== -->
+    <main class="admin-container">
+
+        <!-- ===== SUMMARY CARDS ===== -->
+        <div class="summary-grid" id="summaryGrid">
+            <div class="summary-card">
+                <div class="icon"><i class="fas fa-users"></i></div>
+                <div class="number" id="totalUsers">0</div>
+                <div class="label">Total Users</div>
+                <div class="sub-label">Registered members</div>
+            </div>
+            <div class="summary-card">
+                <div class="icon"><i class="fas fa-newspaper"></i></div>
+                <div class="number" id="totalPosts">0</div>
+                <div class="label">Total Posts</div>
+                <div class="sub-label">Community posts</div>
+            </div>
+            <div class="summary-card">
+                <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="number" id="totalActivities">0</div>
+                <div class="label">Total Activities</div>
+                <div class="sub-label">Events & activities</div>
+            </div>
+            <div class="summary-card">
+                <div class="icon"><i class="fas fa-heart"></i></div>
+                <div class="number" id="totalLikes">0</div>
+                <div class="label">Total Likes</div>
+                <div class="sub-label">Across all posts</div>
+            </div>
         </div>
 
-        <input type="hidden" id="editPostId" />
-
-        <div class="form-group">
-            <label>Title</label>
-            <input type="text" id="editPostTitle" class="form-control" placeholder="Post title..." />
+        <!-- ===== SEARCH BAR ===== -->
+        <div class="search-bar">
+            <input type="text" id="adminSearchInput" onkeyup="filterPosts()" placeholder="🔍 Search posts or author..." />
+            <span class="post-count-badge" id="postCountBadge">0 Posts</span>
         </div>
 
-        <div class="form-group">
-            <label>Category</label>
-            <select id="editPostCategory" class="form-control">
-                <option value="general">General</option>
-                <option value="news">News</option>
-                <option value="development">Development</option>
-                <option value="education">Education</option>
-            </select>
+        <!-- ===== POSTS FEED ===== -->
+        <div id="adminPostsFeed">
+            <div style="text-align:center; padding:40px; color:#666;">
+                <i class="fas fa-spinner fa-spin" style="font-size:1.8rem; color:var(--accent-gold);"></i>
+                <p style="margin-top:10px; font-size:0.9rem;">Loading posts from database...</p>
+            </div>
         </div>
+    </main>
 
-        <div class="form-group">
-            <label>Content</label>
-            <textarea id="editPostContent" class="form-control" rows="5" placeholder="Post main text..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Change/Update Image (Optional)</label>
-            <input type="file" id="editImageFile" accept="image/*" class="form-control" />
-            <div id="uploadStatus" style="font-size:0.75rem; color:var(--bmd-primary); margin-top:4px;"></div>
-        </div>
-
-        <!-- Current Image Preview -->
-        <div id="currentImageWrapper" style="display:none; margin-bottom: 12px;">
-            <label style="font-size:0.72rem; color:#666;">Current Attached Media:</label>
-            <img id="currentImagePreview" src="" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px; margin-top:4px;" />
-        </div>
-
-        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
-            <button onclick="closeEditModal()" style="padding:9px 16px; background:#e0e0e0; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Cancel</button>
-            <button id="saveEditBtn" onclick="savePostEdit()" style="padding:9px 18px; background:var(--bmd-primary); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
-                <i class="fas fa-save"></i> Save Changes
-            </button>
-        </div>
-    </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// 1. Cloudinary Credentials Configuration
-const CLOUD_NAME = 'dp81zzxlh';
-const UPLOAD_PRESET = 'Unsigned upload';
-const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
-
-// 2. Firebase Configuration Setup
-const firebaseConfig = {
-    apiKey: "AIzaSyC-PINF2AJcETYIMINiCfT0gSxLxw70vSE",
-    authDomain: "bmd-app-1aec8.firebaseapp.com",
-    projectId: "bmd-app-1aec8",
-    storageBucket: "bmd-app-1aec8.firebasestorage.app",
-    messagingSenderId: "722780031230",
-    appId: "1:722780031230:web:cd19a98e24e4d9d80dfdaf"
-};
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-const db = firebase.firestore();
-let loadedPosts = [];
-
-function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2800);
-}
-
-// 3. Real-time Firestore Listener
-function listenToAdminPosts() {
-    db.collection('posts')
-      .orderBy('createdAt', 'desc')
-      .onSnapshot(snapshot => {
-          loadedPosts = [];
-          snapshot.forEach(doc => {
-              loadedPosts.push({ id: doc.id, ...doc.data() });
-          });
-          document.getElementById('postCountBadge').textContent = `${loadedPosts.length} Posts`;
-          renderAdminPosts(loadedPosts);
-      }, error => {
-          console.error("Firestore read error:", error);
-          showToast("⚠️ Failed to connect to Firestore.");
-      });
-}
-
-// 4. Render Firestore Posts Cleanly
-function renderAdminPosts(posts) {
-    const feed = document.getElementById('adminPostsFeed');
-    if (posts.length === 0) {
-        feed.innerHTML = `
-            <div style="text-align:center; padding:40px; background:#fff; border-radius:12px; color:#666;">
-                <i class="fas fa-folder-open" style="font-size:2rem; color:var(--bmd-gold);"></i>
-                <p style="margin-top:8px;">No posts available in database.</p>
-            </div>`;
-        return;
-    }
-
-    let html = '';
-    posts.forEach(post => {
-        const title = escapeHtml(post.title || 'Untitled Post');
-        const content = escapeHtml(post.content || post.preview || '');
-        const author = escapeHtml(post.authorName || 'Community Member');
-        const category = escapeHtml(post.category || 'General');
-        const likes = post.likes || 0;
-
-        let mediaHtml = '';
-        if (post.imageUrl) {
-            mediaHtml = `<img src="${post.imageUrl}" class="post-media-preview" alt="Post Media" loading="lazy" />`;
-        } else if (post.videoUrl) {
-            mediaHtml = `<video src="${post.videoUrl}" controls style="width:100%; max-height:240px; border-radius:10px; margin:10px 0;"></video>`;
-        } else if (post.audioUrl) {
-            mediaHtml = `<audio src="${post.audioUrl}" controls style="width:100%; margin:10px 0;"></audio>`;
-        }
-
-        html += `
-        <article class="admin-post-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="font-size:0.8rem; font-weight:700; color:var(--bmd-primary);">
-                        <i class="fas fa-user-circle"></i> ${author}
-                    </span>
-                    <span style="font-size:0.65rem; background:#e8e0d2; color:var(--bmd-primary-dark); padding:2px 8px; border-radius:10px; font-weight:600; text-transform:uppercase;">
-                        ${category}
-                    </span>
-                </div>
-                <span style="font-size:0.75rem; font-weight:800; color:#e74c3c; background:#fdeae8; padding:4px 10px; border-radius:12px;">
-                    <i class="fas fa-heart"></i> ${likes} Likes
-                </span>
+    <!-- ===== EDIT MODAL ===== -->
+    <div id="editModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Edit Post</h3>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
             </div>
 
-            <h4 style="font-family:'Playfair Display',serif; font-size:1.1rem; color:#111; margin-bottom:6px;">${title}</h4>
-            <p style="font-size:0.85rem; color:#444; line-height:1.45; margin-bottom:8px;">${content}</p>
+            <input type="hidden" id="editPostId" />
 
-            ${mediaHtml}
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="editPostTitle" class="form-control" placeholder="Post title..." />
+            </div>
 
-            <div style="display:flex; gap:8px; justify-content:flex-end; border-top:1px solid #f0f0f0; padding-top:10px; margin-top:8px;">
-                <button onclick="openEditModal('${post.id}')" style="background:#f0d080; color:#0f261b; border:none; padding:7px 14px; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-                <button onclick="deletePost('${post.id}')" style="background:#e74c3c; color:#fff; border:none; padding:7px 14px; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;">
-                    <i class="fas fa-trash-alt"></i> Delete
+            <div class="form-group">
+                <label>Category</label>
+                <select id="editPostCategory" class="form-control">
+                    <option value="general">General</option>
+                    <option value="news">News</option>
+                    <option value="development">Development</option>
+                    <option value="education">Education</option>
+                    <option value="health">Health</option>
+                    <option value="agriculture">Agriculture</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Content</label>
+                <textarea id="editPostContent" class="form-control" rows="5" placeholder="Post main text..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Change Image (Optional)</label>
+                <input type="file" id="editImageFile" accept="image/*" class="form-control" />
+                <div class="upload-status" id="uploadStatus"></div>
+            </div>
+
+            <div class="current-image-wrapper" id="currentImageWrapper">
+                <label>Current Image:</label>
+                <img id="currentImagePreview" src="" alt="Current image" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="btn-save" id="saveEditBtn" onclick="savePostEdit()">
+                    <i class="fas fa-save"></i> Save Changes
                 </button>
             </div>
-        </article>`;
-    });
+        </div>
+    </div>
 
-    feed.innerHTML = html;
-}
+    <!-- ===== BOTTOM NAV ===== -->
+    <nav class="bottom-nav">
+        <button class="nav-item" data-tab="home" id="navHome"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-item" data-tab="register" id="navRegister"><i class="fas fa-user-plus"></i><span>Register</span></button>
+        <button class="nav-item post-btn" data-tab="post" id="navPost"><i class="fas fa-plus"></i><span>Post</span></button>
+        <button class="nav-item" data-tab="activities" id="navActivities"><i class="fas fa-calendar-alt"></i><span>Activities</span></button>
+        <button class="nav-item" data-tab="account" id="navAccount"><i class="fas fa-user-circle"></i><span>Account</span></button>
+    </nav>
 
-// 5. Search Filter Functionality
-function filterPosts() {
-    const query = document.getElementById('adminSearchInput').value.toLowerCase();
-    const filtered = loadedPosts.filter(p => 
-        (p.title && p.title.toLowerCase().includes(query)) ||
-        (p.authorName && p.authorName.toLowerCase().includes(query)) ||
-        (p.content && p.content.toLowerCase().includes(query))
-    );
-    renderAdminPosts(filtered);
-}
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
 
-// 6. Cloudinary Upload Helper
-async function uploadToCloudinary(file) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', UPLOAD_PRESET);
-
-    const response = await fetch(CLOUDINARY_URL, {
-        method: 'POST',
-        body: formData
-    });
-
-    if (!response.ok) {
-        throw new Error("Cloudinary upload failed");
-    }
-
-    const data = await response.json();
-    return data.secure_url;
-}
-
-// 7. Delete Post directly from Firestore
-async function deletePost(postId) {
-    if (confirm("Are you sure you want to permanently delete this post from Firestore?")) {
-        try {
-            await db.collection('posts').doc(postId).delete();
-            showToast("🗑️ Post deleted successfully!");
-        } catch (err) {
-            console.error("Delete error:", err);
-            showToast("❌ Failed to delete post");
-        }
-    }
-}
-
-// 8. Open & Fill Edit Modal
-function openEditModal(postId) {
-    const post = loadedPosts.find(p => p.id === postId);
-    if (!post) return;
-
-    document.getElementById('editPostId').value = post.id;
-    document.getElementById('editPostTitle').value = post.title || '';
-    document.getElementById('editPostCategory').value = post.category || 'general';
-    document.getElementById('editPostContent').value = post.content || post.preview || '';
-    document.getElementById('editImageFile').value = '';
-    document.getElementById('uploadStatus').textContent = '';
-
-    const imgWrapper = document.getElementById('currentImageWrapper');
-    const imgPreview = document.getElementById('currentImagePreview');
-    if (post.imageUrl) {
-        imgPreview.src = post.imageUrl;
-        imgWrapper.style.display = 'block';
-    } else {
-        imgWrapper.style.display = 'none';
-    }
-
-    document.getElementById('editModal').style.display = 'flex';
-}
-
-function closeEditModal() {
-    document.getElementById('editModal').style.display = 'none';
-}
-
-// 9. Save Edited Post to Firestore (with optional Cloudinary Upload)
-async function savePostEdit() {
-    const postId = document.getElementById('editPostId').value;
-    const newTitle = document.getElementById('editPostTitle').value.trim();
-    const newCategory = document.getElementById('editPostCategory').value;
-    const newContent = document.getElementById('editPostContent').value.trim();
-    const imageFileInput = document.getElementById('editImageFile');
-    const statusDiv = document.getElementById('uploadStatus');
-    const saveBtn = document.getElementById('saveEditBtn');
-
-    if (!newTitle) {
-        showToast("⚠️ Title is required!");
-        return;
-    }
-
-    try {
-        saveBtn.disabled = true;
-        saveBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving...`;
-
-        let updatedData = {
-            title: newTitle,
-            category: newCategory,
-            content: newContent,
-            preview: newContent.slice(0, 140)
+    <!-- ============================================================ -->
+    <!-- ===== FIREBASE + APP LOGIC ===== -->
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        //  FIREBASE CONFIG
+        // ================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-PINF2AJcETYIMINiCfT0gSxLxw70vSE",
+            authDomain: "bmd-app-1aec8.firebaseapp.com",
+            projectId: "bmd-app-1aec8",
+            storageBucket: "bmd-app-1aec8.firebasestorage.app",
+            messagingSenderId: "722780031230",
+            appId: "1:722780031230:web:cd19a98e24e4d9d80dfdaf"
         };
 
-        // If a new image is selected, upload to Cloudinary first
-        if (imageFileInput.files.length > 0) {
-            statusDiv.textContent = "⏳ Uploading image to Cloudinary...";
-            const uploadedImageUrl = await uploadToCloudinary(imageFileInput.files[0]);
-            updatedData.imageUrl = uploadedImageUrl;
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
 
-        await db.collection('posts').doc(postId).update(updatedData);
-        
-        closeEditModal();
-        showToast("✏️ Post updated successfully!");
-    } catch (err) {
-        console.error("Update error:", err);
-        showToast("❌ Update failed!");
-    } finally {
-        saveBtn.disabled = false;
-        saveBtn.innerHTML = `<i class="fas fa-save"></i> Save Changes`;
-    }
-}
+        const db = firebase.firestore();
+        const auth = firebase.auth();
 
-function escapeHtml(str) { 
-    return str ? str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]) : ''; 
-}
+        // ================================================================
+        //  CLOUDINARY
+        // ================================================================
+        const CLOUD_NAME = 'dp81zzxlh';
+        const UPLOAD_PRESET = 'Unsigned upload';
+        const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
 
-// Initialize Real-time Listener
-listenToAdminPosts();
-</script>
+        // ================================================================
+        //  STATE
+        // ================================================================
+        let loadedPosts = [];
+        let loadedUsers = [];
+        let loadedActivities = [];
+        let currentUser = null;
+
+        // ================================================================
+        //  DOM REFS
+        // ================================================================
+        const postsFeed = document.getElementById('adminPostsFeed');
+        const postCountBadge = document.getElementById('postCountBadge');
+        const toast = document.getElementById('toast');
+
+        // ================================================================
+        //  TOAST
+        // ================================================================
+        let toastTimer = null;
+
+        function showToast(msg, duration = 2800) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        // ================================================================
+        //  AUTH
+        // ================================================================
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            if (!user) {
+                showToast('Please sign in to access admin panel.', 3000);
+                setTimeout(() => {
+                    window.location.href = 'account.html';
+                }, 2000);
+                return;
+            }
+            // Load all data
+            loadStats();
+            listenToPosts();
+        });
+
+        // ================================================================
+        //  LOAD STATISTICS
+        // ================================================================
+        function loadStats() {
+            // Count users
+            db.collection('users').get().then(snap => {
+                document.getElementById('totalUsers').textContent = snap.size;
+            }).catch(() => {});
+
+            // Count posts
+            db.collection('posts').get().then(snap => {
+                document.getElementById('totalPosts').textContent = snap.size;
+            }).catch(() => {});
+
+            // Count activities
+            db.collection('activities').get().then(snap => {
+                document.getElementById('totalActivities').textContent = snap.size;
+            }).catch(() => {});
+
+            // Count total likes
+            db.collection('posts').get().then(snap => {
+                let total = 0;
+                snap.forEach(doc => {
+                    total += doc.data().likes || 0;
+                });
+                document.getElementById('totalLikes').textContent = total;
+            }).catch(() => {});
+        }
+
+        // ================================================================
+        //  LISTEN TO POSTS (Real-time)
+        // ================================================================
+        function listenToPosts() {
+            db.collection('posts')
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(snapshot => {
+                    loadedPosts = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        loadedPosts.push({
+                            id: doc.id,
+                            ...data,
+                            createdAt: data.createdAt ? data.createdAt.toDate() : new Date()
+                        });
+                    });
+                    postCountBadge.textContent = `${loadedPosts.length} Posts`;
+                    renderPosts(loadedPosts);
+                }, error => {
+                    console.error("Firestore error:", error);
+                    showToast("⚠️ Failed to connect to Firestore.");
+                });
+        }
+
+        // ================================================================
+        //  RENDER POSTS
+        // ================================================================
+        function renderPosts(posts) {
+            if (posts.length === 0) {
+                postsFeed.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>No Posts Available</h3>
+                        <p>Posts will appear here once created.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            posts.forEach(post => {
+                const title = escapeHtml(post.title || 'Untitled Post');
+                const content = escapeHtml(post.content || post.preview || '');
+                const author = escapeHtml(post.authorName || 'Anonymous');
+                const category = escapeHtml(post.category || 'General');
+                const likes = post.likes || 0;
+
+                let mediaHtml = '';
+                if (post.imageUrl) {
+                    mediaHtml = `<img src="${post.imageUrl}" class="post-media-preview" alt="Post Media" loading="lazy" />`;
+                } else if (post.videoUrl) {
+                    mediaHtml = `<video src="${post.videoUrl}" controls style="width:100%; max-height:220px; border-radius:12px; margin:8px 0;"></video>`;
+                } else if (post.audioUrl) {
+                    mediaHtml = `<audio src="${post.audioUrl}" controls style="width:100%; margin:8px 0;"></audio>`;
+                }
+
+                html += `
+                    <article class="admin-post-card">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <i class="fas fa-user-circle"></i> ${author}
+                                <span class="post-category">${category}</span>
+                            </div>
+                            <span class="post-likes"><i class="fas fa-heart"></i> ${likes}</span>
+                        </div>
+
+                        <h4 class="post-title">${title}</h4>
+                        <div class="post-content">${content}</div>
+
+                        ${mediaHtml}
+
+                        <div class="post-actions">
+                            <button class="btn-action view" onclick="viewPost('${post.id}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="btn-action edit" onclick="openEditModal('${post.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-action delete" onclick="deletePost('${post.id}')">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </div>
+                    </article>
+                `;
+            });
+
+            postsFeed.innerHTML = html;
+        }
+
+        // ================================================================
+        //  VIEW POST
+        // ================================================================
+        function viewPost(postId) {
+            window.open(`index.html?post=${postId}`, '_blank');
+        }
+
+        // ================================================================
+        //  SEARCH FILTER
+        // ================================================================
+        function filterPosts() {
+            const query = document.getElementById('adminSearchInput').value.toLowerCase().trim();
+            if (!query) {
+                renderPosts(loadedPosts);
+                return;
+            }
+            const filtered = loadedPosts.filter(p =>
+                (p.title && p.title.toLowerCase().includes(query)) ||
+                (p.authorName && p.authorName.toLowerCase().includes(query)) ||
+                (p.content && p.content.toLowerCase().includes(query))
+            );
+            renderPosts(filtered);
+        }
+
+        // ================================================================
+        //  CLOUDINARY UPLOAD
+        // ================================================================
+        async function uploadToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+
+            const response = await fetch(CLOUDINARY_URL, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error("Cloudinary upload failed");
+            }
+            const data = await response.json();
+            return data.secure_url;
+        }
+
+        // ================================================================
+        //  DELETE POST
+        // ================================================================
+        async function deletePost(postId) {
+            if (!confirm("Are you sure you want to permanently delete this post?")) return;
+
+            try {
+                await db.collection('posts').doc(postId).delete();
+                showToast("🗑️ Post deleted successfully!");
+            } catch (err) {
+                console.error("Delete error:", err);
+                showToast("❌ Failed to delete post");
+            }
+        }
+
+        // ================================================================
+        //  OPEN EDIT MODAL
+        // ================================================================
+        function openEditModal(postId) {
+            const post = loadedPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            document.getElementById('editPostId').value = post.id;
+            document.getElementById('editPostTitle').value = post.title || '';
+            document.getElementById('editPostCategory').value = post.category || 'general';
+            document.getElementById('editPostContent').value = post.content || post.preview || '';
+            document.getElementById('editImageFile').value = '';
+            document.getElementById('uploadStatus').textContent = '';
+
+            const imgWrapper = document.getElementById('currentImageWrapper');
+            const imgPreview = document.getElementById('currentImagePreview');
+            if (post.imageUrl) {
+                imgPreview.src = post.imageUrl;
+                imgWrapper.style.display = 'block';
+            } else {
+                imgWrapper.style.display = 'none';
+            }
+
+            document.getElementById('editModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ================================================================
+        //  CLOSE EDIT MODAL
+        // ================================================================
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ================================================================
+        //  SAVE POST EDIT
+        // ================================================================
+        async function savePostEdit() {
+            const postId = document.getElementById('editPostId').value;
+            const newTitle = document.getElementById('editPostTitle').value.trim();
+            const newCategory = document.getElementById('editPostCategory').value;
+            const newContent = document.getElementById('editPostContent').value.trim();
+            const imageFileInput = document.getElementById('editImageFile');
+            const statusDiv = document.getElementById('uploadStatus');
+            const saveBtn = document.getElementById('saveEditBtn');
+
+            if (!newTitle || !newContent) {
+                showToast("⚠️ Title and content are required!");
+                return;
+            }
+
+            try {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<span class="spinner"></span> Saving...';
+
+                let updatedData = {
+                    title: newTitle,
+                    category: newCategory,
+                    content: newContent,
+                    preview: newContent.slice(0, 150) + (newContent.length > 150 ? '…' : ''),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                if (imageFileInput.files.length > 0) {
+                    statusDiv.textContent = "⏳ Uploading image...";
+                    const uploadedImageUrl = await uploadToCloudinary(imageFileInput.files[0]);
+                    updatedData.imageUrl = uploadedImageUrl;
+                    statusDiv.textContent = "";
+                }
+
+                await db.collection('posts').doc(postId).update(updatedData);
+                closeEditModal();
+                showToast("✏️ Post updated successfully!");
+            } catch (err) {
+                console.error("Update error:", err);
+                showToast("❌ Update failed: " + err.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+            }
+        }
+
+        // ================================================================
+        //  NAVIGATION
+        // ================================================================
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const tab = item.dataset.tab;
+                document.querySelectorAll('.bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+
+                switch (tab) {
+                    case 'home': window.location.href = 'index.html'; break;
+                    case 'register': window.location.href = 'register.html'; break;
+                    case 'post': window.location.href = 'post.html'; break;
+                    case 'activities': window.location.href = 'activities.html'; break;
+                    case 'account': window.location.href = 'account.html'; break;
+                    default: break;
+                }
+            });
+        });
+
+        // ================================================================
+        //  UTILITY
+        // ================================================================
+        function escapeHtml(str) {
+            return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+        console.log('🛡️ BMD Admin Dashboard loaded.');
+    </script>
+
 </body>
 </html>
